@@ -31,10 +31,16 @@ const User = mongoose.model('User', {
         default: -1
     },
     tel: { //電話
-        type: String
+        type: String,
+        default: ''
     },
     address: { //住址
-        type: String
+        type: String,
+        default: ''
+    },
+    identity: { //身分證字號
+        type: String,
+        default: ''
     },
     status: { //狀態
         type: Number,
@@ -43,20 +49,21 @@ const User = mongoose.model('User', {
         enum: [0, 1, 2]
     },
     birthday: { //生日
-        type: Date
+        type: Date,
+        default: Date.now
     },
     cart: { //購物車內東西
-        type: [{
-            id: { type: String },
-            number: { type: Number }
-        }]
+        type: Array,
+        default: []
     },
     order: { //訂單ID
-        type: Array
+        type: Array,
+        default: []
     },
     //追蹤中的商品ID
     like: {
-        type: Array
+        type: Array,
+        default: []
     }
 
 })

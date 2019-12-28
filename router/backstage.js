@@ -2,6 +2,7 @@ const express = require('express')
 let router = express.Router()
 
 let Commodity = require('../models/Commodity.js', { useMongoClient: true })
+let User = require('../models/user.js', { useMongoClient: true })
 
 
 //處理新增商品
@@ -23,9 +24,78 @@ router.post('/backstage/newCommodity', async function(req, rew) {
 
 
 
+//取得會員列表
+router.get('/backstage/getMember', function(req, res) {
+    User.find()
+        .then(data => {
+            return res.json({
+                member: data
+            })
+        })
+})
 
+//更新會員狀態
+router.post('/backstage/updateMember', (req, res) => {
+    let body = req.body
+    User.updateOne({ '_id': body.member_id }, { "status": body.status }, function(err, data) {
+        if (err) return console.log(err)
+        return res.json({
+            err_code: 0
+        })
+    });
+})
 
+//取得商品列表
+router.get('/backstage/getCommodity', function(req, res) {
+    Commodity.find()
+        .then(data => {
+            return res.json({
+                commodity: data
+            })
+        })
+})
 
+//新增商品
+router.post('/backstage/addCommodity', (req, res) => {
+    let body = req.body
+    console.log(body)
+    new Commodity(body).save((err, commodity) => {
+        if (err) {
+            return res.status(500).json({
+                err_code: 500,
+                message: 'Internal error'
+            })
+        }
+        return res.json({
+            err_code: 0,
+            message: 'OK',
+            commodity: commodity
+        })
+    })
+})
+
+//更新商品資料
+router.post('/backstage/updateCommodity', async(req, res) => {
+    let body = req.body
+    await Commodity.updateOne({ '_id': body.commodity_id }, {
+        title: body.data.title,
+        img: body.data.img,
+        ori_price: body.data.ori_price,
+        sale_price: body.data.sale_price,
+        info: body.data.info,
+        classify: body.data.classify,
+        last_time: new Date()
+    }, function(err, responsion) {
+        if (err) return console.log(err)
+    });
+    await Commodity.findOne({ '_id': body.commodity_id })
+        .then((data) => {
+            return res.json({
+                err_code: 0,
+                data: data
+            })
+        })
+})
 
 
 

@@ -4,7 +4,7 @@ const fs = require('fs');
 //密碼加密
 let md5 = require('blueimp-md5')
 let User = require('../models/user.js', { useMongoClient: true })
-
+let Commodity = require('../models/Commodity.js', { useMongoClient: true })
 
 router.get('/', function(req, res) {
     fs.readFile('../dist/index.html', (err, data) => {
@@ -57,8 +57,8 @@ router.post('/ajax/login', async function(req, res) {
     let body = req.body
     body.password = md5(body.password)
     await User.findOne({
-        email: body.email,
-        password: body.password
+        'email': body.email,
+        'password': body.password
     }, (err, user) => {
         if (err) {
             return res.status(500).json({
@@ -101,9 +101,105 @@ router.get('/isLogin', (req, res) => {
     }
 })
 
+//處理新增追蹤
+router.post('/ajax/like', async(req, res) => {
+    let body = req.body
+    let commodityLikeList = []
+    await Commodity.findOne({ '_id': body.commodity_id }, (err, commodity) => {
+        commodityLikeList = commodity.like
+    })
+    commodityLikeList.push(body.user._id)
+    await Commodity.updateOne({ '_id': body.commodity_id }, { 'like': commodityLikeList }, (err) => {
+        if (err) return console.log(err)
+    })
+    await User.updateOne({ '_id': body.user._id }, {
+        'like': body.user.like
+    }, (err, data) => {
+        if (err) return console.log(err)
+        return res.json({
+            err_code: 0
+        })
+    })
+})
+
+//處理刪除追蹤
+router.post('/ajax/dislike', async(req, res) => {
+    let body = req.body
+    let commodityLikeList = []
+    await Commodity.findOne({ '_id': body.commodity_id }, (err, commodity) => {
+        commodityLikeList = commodity.like.filter(item => {
+            return item != body.user._id
+        })
+    })
+    await Commodity.updateOne({ '_id': body.commodity_id }, { 'like': commodityLikeList }, (err) => {
+        if (err) return console.log(err)
+    })
+    await User.updateOne({ '_id': body.user._id }, {
+        'like': body.user.like
+    }, (err, data) => {
+        if (err) return console.log(err)
+        return res.json({
+            err_code: 0
+        })
+    })
+})
+
+//處理更新用戶資訊
+router.post('/ajax/updateUser', async function(req, res) {
+    let body = req.body
+    let password = md5(body.password)
+    await User.findOne({
+        '_id': body._id,
+        'password': password
+    }, (err, user) => {
+        if (err) {
+            return res.status(500).json({
+                err_code: 500,
+                message: 'Internal error'
+            })
+        } else if (!user) {
+            return res.status(200).json({
+                err_code: 1,
+                message: 'email or password error'
+            })
+        } else {
+            User.updateOne({ '_id': body._id }, {
+                'firstname': body.firstname,
+                'lastname': body.lastname,
+                'email': body.email,
+                'gender': body.gender,
+                'birthday': body.birthday,
+                'tel': body.tel,
+                'address': body.address,
+                'identity': body.identity
+            }, (err, data) => {
+                if (err) return console.log(err)
+                return res.json({
+                    err_code: 0
+                })
+            })
+        }
+    })
+})
 
 
-
+//處理更新用戶購物車
+router.post('/ajax/updateCart', async function(req, res) {
+    let body = req.body
+    console.log(body)
+    User.updateOne({ '_id': body.userID }, {
+        'cart': body.cart
+    }, (err, data) => {
+        if (err) {
+            return res.json({
+                err_code: 1
+            })
+        }
+        return res.json({
+            err_code: 0
+        })
+    })
+})
 
 
 

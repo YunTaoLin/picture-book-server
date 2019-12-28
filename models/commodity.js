@@ -9,9 +9,15 @@ const Commodity = mongoose.model('Commodity', {
         type: String,
         required: true
     },
-    img: { //密碼
+    img: { //圖片
         type: String,
         required: true,
+    },
+    classify: { //分類
+        type: Number,
+        default: 0,
+        //0: 幼兒，1:兒童，2:青少年，3:其他周邊，-1:當季精選
+        enum: [0, 1, 2, 3, -1]
     },
     ori_price: { //商品原價
         type: Number,
@@ -26,6 +32,10 @@ const Commodity = mongoose.model('Commodity', {
         default: '熱銷中'
     },
     like: { //追蹤者的ID
+        type: Array,
+        default: []
+    },
+    star: { //星星數陣列
         type: Array,
         default: []
     },
@@ -44,7 +54,7 @@ const Commodity = mongoose.model('Commodity', {
     status: { //狀態
         type: Number,
         default: 0,
-        //0: 正常，1:缺貨中，2:已下架
+        //0: 正常，1:預購中，2:缺貨中
         enum: [0, 1, 2]
     }
 })
