@@ -8,7 +8,7 @@ const app = express()
 
 app.use(cors())
 app.use('/', express.static(path.join(__dirname + '/dist')))
-
+app.use('/admin', express.static(path.join(__dirname + '/backstage')))
 
 app.use(session({
     secret: 'YunTaoLin', //加密

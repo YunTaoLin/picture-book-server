@@ -5,9 +5,18 @@ const fs = require('fs');
 let md5 = require('blueimp-md5')
 let User = require('../models/user.js', { useMongoClient: true })
 let Commodity = require('../models/Commodity.js', { useMongoClient: true })
+let Order = require('../models/Order.js', { useMongoClient: true })
 
-router.get('/', function(req, res) {
-    fs.readFile('../dist/index.html', (err, data) => {
+
+router.get('/mall', function(req, res) {
+    fs.readFile('./dist/mall.html', (err, data) => {
+        if (err) throw err;
+        res.end(data)
+    })
+})
+
+router.get('/ ', function(req, res) {
+    fs.readFile('./dist/index.html', (err, data) => {
         if (err) throw err;
         res.end(data)
     })
@@ -17,7 +26,6 @@ router.get('/', function(req, res) {
 // 處理註冊
 router.post('/ajax/registered', async function(req, res) {
     let body = req.body
-    console.log(body)
     body.password = md5(body.password)
         // 判斷用戶是否存在
     await User.findOne({ email: body.email }, (err, data) => {
@@ -74,7 +82,6 @@ router.post('/ajax/login', async function(req, res) {
             //登入成功，使用Session紀錄登入狀態
             console.log('登入成功')
             req.session.user = user
-            console.log(req.session)
             res.json({
                 err_code: 0,
                 message: 'OK',
@@ -86,15 +93,12 @@ router.post('/ajax/login', async function(req, res) {
 
 // 剛進來網站時，檢查session是否有資料
 router.get('/isLogin', (req, res) => {
-    console.log(req.session)
     if (req.session.user) {
-        console.log('目前有登入')
         return res.json({
             isLogin: true,
             user: req.session.user
         })
     } else {
-        console.log('沒登入資料')
         return res.json({
             isLogin: false
         })
@@ -186,7 +190,6 @@ router.post('/ajax/updateUser', async function(req, res) {
 //處理更新用戶購物車
 router.post('/ajax/updateCart', async function(req, res) {
     let body = req.body
-    console.log(body)
     User.updateOne({ '_id': body.userID }, {
         'cart': body.cart
     }, (err, data) => {
@@ -201,15 +204,58 @@ router.post('/ajax/updateCart', async function(req, res) {
     })
 })
 
+//新增訂單
+router.post('/ajax/addOrder', function(req, res) {
+    let body = req.body
+    new Order(body.order).save((err, order) => {
+        if (err) {
+            return res.status(500).json({
+                err_code: 500,
+                message: 'Internal error'
+            })
+        }
+        return res.status(200).json({
+            err_code: 0,
+            message: 'ok',
+            order: order
+        })
+    })
 
+})
 
+//更新會員訂單庫
+router.post('/ajax/updateOrder', async function(req, res) {
+    let body = req.body
+    User.updateOne({ '_id': body.userID }, {
+        'order': body.order,
+        'cart': body.cart
+    }, (err, data) => {
+        if (err) {
+            return res.json({
+                err_code: 1
+            })
+        }
+        return res.json({
+            err_code: 0
+        })
+    })
+})
 
-
-
-
-
-
-
-
+//取得訂單資料
+router.post('/ajax/getOrder', async function(req, res) {
+    let body = req.body
+    Order.findOne({ '_id': body.id }, (err, order) => {
+        console.log(order)
+        if (err) {
+            return res.json({
+                err_code: 1
+            })
+        }
+        return res.json({
+            err_code: 0,
+            order: order
+        })
+    })
+})
 
 module.exports = router

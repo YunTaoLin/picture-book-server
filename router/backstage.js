@@ -3,6 +3,14 @@ let router = express.Router()
 
 let Commodity = require('../models/Commodity.js', { useMongoClient: true })
 let User = require('../models/user.js', { useMongoClient: true })
+let Order = require('../models/Order.js', { useMongoClient: true })
+const fs = require('fs');
+router.get('/FangFang_admin', function(req, res) {
+    fs.readFile('./backstage/index.html', (err, data) => {
+        if (err) throw err;
+        res.end(data)
+    })
+})
 
 
 //處理新增商品
@@ -98,7 +106,15 @@ router.post('/backstage/updateCommodity', async(req, res) => {
 })
 
 
-
+//取得訂單
+router.get('/backstage/getOrder', function(req, res) {
+    Order.find()
+        .then(data => {
+            return res.json({
+                order: data
+            })
+        })
+})
 
 
 module.exports = router
