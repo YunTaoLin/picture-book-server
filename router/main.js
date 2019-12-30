@@ -4,8 +4,8 @@ const fs = require('fs');
 //密碼加密
 let md5 = require('blueimp-md5')
 let User = require('../models/user.js', { useMongoClient: true })
-let Commodity = require('../models/Commodity.js', { useMongoClient: true })
-let Order = require('../models/Order.js', { useMongoClient: true })
+let Commodity = require('../models/commodity.js', { useMongoClient: true })
+let Order = require('../models/order.js', { useMongoClient: true })
 
 
 router.get('/mall', function(req, res) {

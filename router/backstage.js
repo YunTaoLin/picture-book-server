@@ -1,9 +1,9 @@
 const express = require('express')
 let router = express.Router()
 
-let Commodity = require('../models/Commodity.js', { useMongoClient: true })
 let User = require('../models/user.js', { useMongoClient: true })
-let Order = require('../models/Order.js', { useMongoClient: true })
+let Commodity = require('../models/commodity.js', { useMongoClient: true })
+let Order = require('../models/order.js', { useMongoClient: true })
 const fs = require('fs');
 router.get('/FangFang_admin', function(req, res) {
     fs.readFile('./backstage/index.html', (err, data) => {
