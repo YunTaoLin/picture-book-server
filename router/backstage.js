@@ -5,7 +5,9 @@ let User = require('../models/user.js', { useMongoClient: true })
 let Commodity = require('../models/commodity.js', { useMongoClient: true })
 let Order = require('../models/order.js', { useMongoClient: true })
 const fs = require('fs');
-router.get('/FangFang_admin', function(req, res) {
+
+
+router.get('/admin', function(req, res) {
     fs.readFile('./backstage/index.html', (err, data) => {
         if (err) throw err;
         res.end(data)
