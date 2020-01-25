@@ -214,6 +214,7 @@ router.post('/ajax/addOrder', function(req, res) {
                 message: 'Internal error'
             })
         }
+        console.log('新增訂單成功' + order)
         return res.status(200).json({
             err_code: 0,
             message: 'ok',
