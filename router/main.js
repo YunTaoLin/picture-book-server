@@ -9,14 +9,14 @@ let Order = require('../models/order.js', { useMongoClient: true })
 
 
 router.get('/mall', function(req, res) {
-    fs.readFile('./dist/mall.html', (err, data) => {
+    fs.readFile('./dist/index.html', (err, data) => {
         if (err) throw err;
         res.end(data)
     })
 })
 
 router.get('/ ', function(req, res) {
-    fs.readFile('./dist/index.html', (err, data) => {
+    fs.readFile('./dist/enter.html', (err, data) => {
         if (err) throw err;
         res.end(data)
     })

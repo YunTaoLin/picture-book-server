@@ -14,7 +14,6 @@ app.use(session({
     secret: 'YunTaoLin', //加密
     resave: false,
     saveUninitialized: true, //不管有無用到，都創建session
-    // cookie: { secure: true }//這個設置代表安全性，若不是Https協議則不儲存cookie
 }))
 
 app.use(bodyParser.urlencoded({ extended: false }))
