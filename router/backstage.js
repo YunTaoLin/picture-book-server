@@ -130,6 +130,17 @@ router.post('/backstage/deleteMember', function(req, res) {
   })
 })
 
+//刪除訂單
+router.post('/backstage/deleteOrder', function(req, res) {
+  let body = req.body
+  // 目前不需要密碼驗證
+  Order.findByIdAndDelete(body.deleteID)
+    .then(data => {
+      return res.json({
+        error_code: 0
+      })
+  })
+})
 
 
 
