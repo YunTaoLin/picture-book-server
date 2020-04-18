@@ -48,7 +48,7 @@ router.get('/backstage/getMember', function(req, res) {
 router.post('/backstage/updateMember', (req, res) => {
     let body = req.body
     User.updateOne({ '_id': body.member_id }, { "status": body.status }, function(err, data) {
-        if (err) return console.log(err)
+
         return res.json({
             err_code: 0
         })
@@ -68,7 +68,6 @@ router.get('/backstage/getCommodity', function(req, res) {
 //新增商品
 router.post('/backstage/addCommodity', (req, res) => {
     let body = req.body
-    console.log(body)
     new Commodity(body).save((err, commodity) => {
         if (err) {
             return res.status(500).json({
