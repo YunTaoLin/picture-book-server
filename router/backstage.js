@@ -141,7 +141,15 @@ router.post('/backstage/deleteOrder', function(req, res) {
       })
   })
 })
-
+//更新訂單狀態
+router.post('/backstage/updateOrder', (req, res) => {
+  let body = req.body
+  User.updateOne({ '_id': body.order_id }, { "status": body.status }, function(err, data) {
+      return res.json({
+          err_code: 0
+      })
+  });
+})
 
 
 
