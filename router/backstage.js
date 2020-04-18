@@ -144,8 +144,14 @@ router.post('/backstage/deleteOrder', function(req, res) {
 //更新訂單狀態
 router.post('/backstage/updateOrder', (req, res) => {
   let body = req.body
-  User.updateOne({ '_id': body.order_id }, { "status": body.status }, function(err, data) {
-      return res.json({
+  Order.updateOne({ '_id': body.order_id }, { "status": body.status }, function(err, data) {
+    if (err) {
+      return res.status(500).json({
+          err_code: 500,
+          message: 'Internal error'
+      })
+    }   
+    return res.json({
           err_code: 0
       })
   });
