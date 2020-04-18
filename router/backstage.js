@@ -118,4 +118,27 @@ router.get('/backstage/getOrder', function(req, res) {
 })
 
 
+//刪除會員
+router.post('/backstage/deleteMember', function(req, res) {
+  let body = req.body
+  '密碼驗證'
+  if(body.pass =='a8799877'){
+    User.findByIdAndDelete(body.deleteID)
+    .then(data => {
+      return res.json({
+        error_code: 0
+      })
+    })
+  }else{
+    return res.json({
+      error_code: 1,
+      message:'密碼錯誤'
+    })
+  }
+})
+
+
+
+
+
 module.exports = router
