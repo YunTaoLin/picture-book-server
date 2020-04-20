@@ -246,7 +246,6 @@ router.post('/ajax/updateOrder', async function(req, res) {
 router.post('/ajax/getOrder', async function(req, res) {
     let body = req.body
     Order.findOne({ '_id': body.id }, (err, order) => {
-        console.log(order)
         if (err) {
             return res.json({
                 err_code: 1
