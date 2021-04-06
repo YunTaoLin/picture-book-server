@@ -1,6 +1,5 @@
 ## 簡介
-- 此為方方繪本開源專案的Restful API
-- 採用express-session Middleware保存使用者登入狀態
+- 此為繪本電商平台開源專案的Restful API
 - 前台code請[見此](https://github.com/YunTaoLin/picture-book)
 - 後台系統code請[見此](https://github.com/YunTaoLin/picture-book-backstage)
 
